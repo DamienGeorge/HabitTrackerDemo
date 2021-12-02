@@ -1,0 +1,20 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Create
+       [dbo].[Goal] (Table)
+       [dbo].[Habit] (Table)
+       [dbo].[Progress] (Table)
+       [dbo].[FK_Goal_ToHabit] (Foreign Key)
+       [dbo].[FK_Habit_ToAspNetUsers] (Foreign Key)
+       [dbo].[FK_Progress_ToGoal] (Foreign Key)
+
+** Supporting actions

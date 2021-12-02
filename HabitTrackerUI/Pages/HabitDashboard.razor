@@ -1,0 +1,305 @@
+﻿@page "/"
+
+@inject AuthenticationStateProvider _stateProvider
+@inject UserManager<IdentityUser> _userManager
+@inject IHabitData _HabitDataAccess
+@inject NavigationManager _navigator
+@inject ValidationHelper validation
+
+<AuthorizeView>
+    <Authorized>
+        <h3>Dashboard</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-primary mx-2 float-right my-2" type="button" @onclick="(()=>habitIdSelected=0)">Show All Goals</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="@fluidHabitTableCss">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Habit Id</th>
+                            <th>Habit Name</th>
+                            <th>Habit Streak</th>
+                            <th width="20%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var habit in habits)
+                        {
+                            <tr @onclick="(()=>FetchGoals(habit.Id))">
+                                <td>@habit.Id</td>
+                                <td>@habit.HabitName</td>
+                                <td>@habit.HabitStreak</td>
+                                <td width="20%">
+                                    <button class="btn btn-primary mx-1" @onclick="(()=>AddGoalsTrigger(habit.Id))">Add Goal</button>
+                                    @if (habitIdToDelete == habit.Id)
+                                    {
+                                        <button class="btn btn-danger my-2 mx-1" type="button" @onclick="(()=>HandleHabitDelete(habit))">Confirm Delete</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-outline-danger my-2 mx-1" type="button" @onclick="(() => habitIdToDelete = habit.Id)">Delete Habit</button>
+
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (habitIdToEdit > 0)
+            {
+                <div class="col-md-4">
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <label>Habit Id</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="text" readonly @bind-value="habitIdToEdit" class="form-control-plaintext" />
+                        </div>
+                    </div>
+                    @if (goalToEdit != null)
+                    {
+                        <AddGoals goalToEdit="goalToEdit" OnGoalCreated="HandleGoalUpdated"></AddGoals>
+                    }
+                    else
+                    {
+                        <AddGoals OnGoalCreated="HandleGoalCreated"></AddGoals>
+                    }
+                </div>
+            }
+        </div>
+
+        @*//updated Design*@
+        @if (filteredGoalsByHabit.Count > 0)
+        {
+            <div class="row">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Goal Name</th>
+                            <th>Habit Id</th>
+                            <th>Goal Description</th>
+                            <th>Progress</th>
+                            <th>Start Date</th>
+                            <th>Target Period</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var goal in filteredGoalsByHabit)
+                        {
+                            <tr>
+                                <td>@goal.GoalName</td>
+                                <td>@goal.HabitId</td>
+                                <td>@goal.GoalDescription</td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated @DecideProgressBarBackground(goal)" aria-valuemax="100" style="width:@CalculatePercentageProgress(goal)%" aria-valuemin="0" role="progressbar"></div>
+                                    </div>
+                                </td>
+                                <td>@goal.StartDate</td>
+                                <td>@goal.TargetPeriod</td>
+                                <td>
+                                    @if (goal.TargetPeriod.Date < DateTime.Today)
+                                    {
+                                        <button class="btn btn-success" disabled type="button">Completed!</button>
+                                    }
+                                    else if (goal.StartDate.Date > DateTime.Today)
+                                    {
+                                        <button class="btn btn-info" disabled type="button">Coming soon!</button>
+                                    }
+                                    else
+                                    {
+                                        @if (progress.Where(x => x.GoalId == goal.Id && (x.DatePerformed.Date == DateTime.Today)).Any() == false)
+                                        {
+                                            <button class="btn btn-outline-success" @onclick="(() => HandleCompletedClick(goal))">Mark Complete</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-success" disabled type="button">Completed Today</button>
+                                        }
+                                    }
+                                    @if (goalIdToDelete == goal.Id)
+                                    {
+                                        <button class="btn btn-danger mx-2" @onclick="(()=>HandleGoalDelete(goal))">Confirm Delete</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-outline-danger mx-2" @onclick="(()=>goalIdToDelete =goal.Id)">Delete</button>
+                                    }
+                                    <button class="btn oi oi-pencil" type="button" @onclick="(()=> HandleEditGoal(goal))"></button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <div class="jumbotron-fluid bg-light">
+            <h1 class="display-4">Hello! Welcome to Dan's Habit Tracker! </h1>
+            <p class="lead">Please create an account or login to get started</p>
+            <hr class="my-3" />
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
+
+@code {
+    //List<IHabitModel> habits = new List<IHabitModel>();
+    //List<IGoalModel> goalByHabit = new List<IGoalModel>();
+
+    //List<IGoalModel> filteredGoalsByHabit => habitIdSelected == 0 ?
+    //    goalByHabit : goalByHabit.Where(x => ((habitIdSelected > 0) && (x.HabitId == habitIdSelected))).ToList<IGoalModel>();
+
+    //List<IProgressModel> progress = new List<IProgressModel>();
+
+    //int progressIndicator = 0;
+    //string bgCSS = EaseOfUse.cssStyleForBackground.GetValueOrDefault(1);
+    //int habitIdSelected = 0;
+
+
+    //bool showAddGoals = false;
+    //int habitIdToEdit = 0;
+    //int habitIdToDelete = 0;
+    //string fluidHabitTableCss = "col-md-12";
+    //IGoalModel goalToEdit = new DisplayGoalModel();
+
+
+    ///// <summary>
+    ///// Sets up the parameters when passed.
+    ///// Fetches the logged in user and all data associated with the user
+    ///// </summary>
+    ///// <returns></returns>
+    //protected override async Task OnParametersSetAsync()
+    //{
+    //    string userMailId = _stateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name;
+
+    //    if (userMailId != null)
+    //    {
+    //        var user = _userManager.FindByEmailAsync(userMailId);
+
+    //        //fetch all habits
+    //        habits = await _HabitDataAccess.FetchHabitsByOwnerId(user.Result.Id);
+
+    //        //Add all goals and append to list
+    //        habits.ForEach(h => { goalByHabit.AddRange(h.Goals); });
+
+    //        //Fetch progress and append to list
+    //        habits.ForEach(h =>
+    //        {
+    //            h.Goals.ForEach(g =>
+    //            {
+    //                progress.AddRange(g.ProgressStatus);
+    //            });
+    //        }
+    //        );
+    //    }
+    //}
+
+    ///// <summary>
+    ///// Updates the Habit Id to filter by
+    ///// and fetches all the goals for the selected Id
+    ///// </summary>
+    ///// <param name="Id"></param>
+    ////TODO- Complete as single line action within the element onclick
+    //private void FetchGoals(int Id)
+    //{
+    //    //TODO - Filterable habitsGoals
+    //    habitIdSelected = Id;
+    //}
+
+    ///// <summary>
+    ///// Trigger to Show the AddGoals Component
+    ///// </summary>
+    ///// <param name="Id"></param>
+    //private void AddGoalsTrigger(int Id)
+    //{
+    //    if (habitIdToEdit == Id)
+    //    {
+    //        habitIdToEdit = 0;
+    //        fluidHabitTableCss = "col-md-12";
+    //    }
+    //    else
+    //    {
+    //        habitIdToEdit = Id;
+    //        fluidHabitTableCss = "col-md-6";
+    //    }
+    //}
+
+    ///// <summary>
+    ///// Handles EventCall Back when a new Goal is created
+    ///// </summary>
+    ///// <param name="goal"></param>
+    //private void HandleGoalCreated(IGoalModel goal)
+    //{
+    //    goal.HabitId = habitIdToEdit;
+    //    goalByHabit.Add(goal);
+
+    //    //TODO - commit goal to db and update list
+    //    _HabitDataAccess.AddGoal(goal);
+    //}
+
+    ///// <summary>
+    ///// Submits progress for the day
+    ///// </summary>
+    ///// <param name="goal"></param>
+    ////TODO - Allow entering of previous data as well
+    //private void HandleCompletedClick(IGoalModel goal)
+    //{
+    //    IProgressModel progressToSubmit = new DisplayProgressModel();
+
+    //    progressToSubmit.GoalId = goal.Id;
+    //    progressToSubmit.DatePerformed = DateTime.Now;
+    //    progressToSubmit.Completed = true;
+
+    //    _HabitDataAccess.SaveProgress(progressToSubmit);
+
+    //    progress.Add(progressToSubmit);
+    //    //TODO - update to view as well?
+    //}
+
+    ///// <summary>
+    ///// Method removes a habit and all data associated with it
+    ///// </summary>
+    ///// <param name="Id"></param>
+    ///// <returns></returns>
+    //private async Task HandleHabitDelete(IHabitModel habit)
+    //{
+    //    await _HabitDataAccess.DeleteHabitById(habit.Id);
+
+    //    goalByHabit.RemoveAll(x => x.HabitId == habit.Id);
+    //    habits.Remove(habit);
+
+    //    //TODO - cleanup ID set variables
+    //    habitIdSelected = 0;
+    //}
+
+    ///// <summary>
+    ///// Called when EditButton is clicked on a goal
+    ///// </summary>
+    ///// <param name="goal"></param>
+    //private void HandleEditGoal(IGoalModel goal)
+    //{
+    //    //TODO - Add method to edit existing Goals. Description, name and dates. Progress?
+
+    //    goalToEdit = goal;
+    //    AddGoalsTrigger(goal.HabitId);
+    //    //habitIdToEdit = goal.HabitId;
+    //}
+
+    //private async Task HandleGoalUpdated(IGoalModel updatedGoal)
+    //{
+    //    //TODO - Update Code
+
+    //    habitIdToEdit = 0;
+    //    goalToEdit = new DisplayGoalModel();
+    //}
+}

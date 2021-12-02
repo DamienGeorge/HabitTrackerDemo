@@ -1,0 +1,21 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Alter
+       [dbo].[Habit] (Table)
+     Create
+       [dbo].[spUpdate_HabitById] (Procedure)
+
+** Supporting actions
+     Refresh
+       [dbo].[spDelete_HabitById] (Procedure)
+       [dbo].[spFetch_HabitsbyOwnerId] (Procedure)
+       [dbo].[spSave_Habit] (Procedure)

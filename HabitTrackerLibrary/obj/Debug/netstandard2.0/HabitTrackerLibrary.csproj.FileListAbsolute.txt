@@ -1,0 +1,10 @@
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerLibrary\bin\Debug\netstandard2.0\HabitTrackerLibrary.deps.json
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerLibrary\bin\Debug\netstandard2.0\HabitTrackerLibrary.dll
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerLibrary\bin\Debug\netstandard2.0\HabitTrackerLibrary.pdb
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerLibrary\obj\Debug\netstandard2.0\HabitTrackerLibrary.AssemblyInfoInputs.cache
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerLibrary\obj\Debug\netstandard2.0\HabitTrackerLibrary.AssemblyInfo.cs
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerLibrary\obj\Debug\netstandard2.0\HabitTrackerLibrary.csproj.CoreCompileInputs.cache
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerLibrary\obj\Debug\netstandard2.0\HabitTrackerLibrary.dll
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerLibrary\obj\Debug\netstandard2.0\HabitTrackerLibrary.pdb
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerLibrary\obj\Debug\netstandard2.0\HabitTrackerLibrary.csproj.AssemblyReference.cache
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerLibrary\obj\Debug\netstandard2.0\HabitTrackerLibrary.GeneratedMSBuildEditorConfig.editorconfig

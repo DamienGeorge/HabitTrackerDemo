@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "d8c6546f-fdd7-48b5-9fc0-a1403c423258": {
+      "ProjectGuid": "d8c6546f-fdd7-48b5-9fc0-a1403c423258",
+      "DisplayName": "HabitTrackerUI",
+      "ColorIndex": 0
+    },
+    "5daa7421-9f27-494b-b9fd-5741e19e11c3": {
+      "ProjectGuid": "5daa7421-9f27-494b-b9fd-5741e19e11c3",
+      "DisplayName": "HabitTrackerLibrary",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}

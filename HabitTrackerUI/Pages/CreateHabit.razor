@@ -1,0 +1,194 @@
+﻿@page "/createhabit"
+@attribute [Authorize]
+
+@using Microsoft.Extensions.Logging
+@inject AuthenticationStateProvider _stateProvider
+@inject UserManager<IdentityUser> _userManager
+@inject ILogger<CreateHabit> _log
+@inject IHabitData _HabitDataAccess
+@inject ValidationHelper validation
+
+<h3>Create Habit to Track</h3>
+
+<h6 class="@cssText">@message</h6>
+<div class="row">
+    <div class="col-md-7">
+        <EditForm Model="habit" OnValidSubmit="HandleValidSubmit">
+            <ValidationSummary />
+            <DataAnnotationsValidator />
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <label>Habit to Learn</label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" @bind-value="habit.HabitName" class="form-control" />
+                </div>
+            </div>
+
+            @if (goals.Count > 0)
+            {
+                if (showAddGoal == false)
+                {
+                    <span class="btn btn-primary my-2 float-right" @onclick="TriggerAddGoal">Add Another Goal</span>
+                }
+                else
+                {
+                    <span class="btn btn-primary my-2 float-right" @onclick="TriggerAddGoal">Hide Add Goal</span>
+                }
+                <table class="table table-striped table-responsive-">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Goal Name</th>
+                            <th>Description</th>
+                            <th>Start Date</th>
+                            <th>Target End Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var goal in goals)
+                        {
+                            <tr>
+                                <td>@goal.GoalName</td>
+                                <td>@goal.GoalDescription</td>
+                                <td>@goal.StartDate</td>
+                                <td>@goal.TargetPeriod</td>
+                                <td>
+                                    <button class="btn oi oi-minus" @onclick="(()=>DeleteGoal(goal))" type="button"></button>
+                                    <button class="btn oi oi-pencil" @onclick="(() => EditGoal(goal))" type="button"></button>
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            }
+            @if (goalToEdit != null)
+            {
+                <AddGoals goalToEdit="goalToEdit" OnGoalCreated="HandleOnGoalCreated"></AddGoals>
+            }
+            else if (goals.Count == 0 || showAddGoal)
+            {
+                <AddGoals OnGoalCreated="HandleOnGoalCreated"></AddGoals>
+            }
+            <div>
+                <button class="btn btn-danger float-left" @onclick="ClearAll">Clear</button>
+                <button class="btn btn-success float-right" type="submit">Create Habit</button>
+            </div>
+
+
+
+        </EditForm>
+    </div>
+</div>
+
+
+@code {
+    const string Success = "text-success";
+    const string Warning = "text-danger";
+
+    string message = "";
+    string cssText = "";
+    bool showAddGoal = false;
+
+    IHabitModel habit = new DisplayHabitModel();
+
+    List<IGoalModel> goals = new List<IGoalModel>();
+    IGoalModel goalToEdit = new DisplayGoalModel();
+
+    /// <summary>
+    /// Handles committing of Habit and goals to db
+    /// </summary>
+    private async Task HandleValidSubmit()
+    {
+        if (goals.Count > 0 == false)
+        {
+            message = "Please add at least one goal!";
+            cssText = Warning;
+            return;
+        }
+
+        _log.LogInformation("Attempting to fetch user");
+
+        FetchUser();
+
+        habit.Goals = goals;
+
+        await _HabitDataAccess.SaveNewHabit(habit);
+
+        message = "Let's start working on a new habit!";
+        cssText = Success;
+
+        habit = new DisplayHabitModel();
+    }
+
+    /// <summary>
+    /// Handles the EventCallback once a goal is added
+    /// </summary>
+    /// <param name="goal"></param>
+    private void HandleOnGoalCreated(IGoalModel goal)
+    {
+        bool result;
+
+        (goal, result) = validation.ValidateGoalActivate(goals, goal);
+
+        if(result == false)
+        {
+            message = "Only one active goal can be present at a time";
+            cssText = Warning;
+            return;
+        }
+
+        goals.Add(goal);
+        showAddGoal = false;
+        goalToEdit = null;
+        message = "";
+    }
+
+    private void DeleteGoal(IGoalModel goal)
+    {
+        message = "Removed goal";
+        cssText = Warning;
+        goals.Remove(goal);
+    }
+
+    private void TriggerAddGoal()
+    {
+        showAddGoal ^= true;
+    }
+
+    /// <summary>
+    /// Clears the Entire Form and Data
+    /// </summary>
+    private void ClearAll()
+    {
+        habit.HabitName = String.Empty;
+        goals.Clear();
+    }
+
+    private void FetchUser()
+    {
+        string currentUserName = _stateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name;
+
+        _log.LogInformation("Found user {user}", currentUserName);
+
+        //TODO- Mask this section more
+        var user = _userManager.FindByEmailAsync(currentUserName);
+
+        if (user.Result == null)
+        {
+            _log.LogDebug("User not found!");
+            return;
+        }
+
+        habit.HabitOwnerId = user.Result.Id;
+        _log.LogInformation("{Habit Name} {Habit Owner}", habit.HabitName, habit.HabitOwnerId);
+    }
+
+    private void EditGoal(IGoalModel goal)
+    {
+        goalToEdit = goal;
+
+        goals.Remove(goal);
+    }
+}

@@ -1,0 +1,99 @@
+﻿@page "/review/{GoalId:int}"
+
+@inject IHabitData _habitDataAccess
+
+<h3>Review Progress</h3>
+
+@for (int n = 0; n < numberOfColumns; n++)
+{
+<div class="col-md-6">
+    <div class="col-sm-1">Monday</div>
+    <div class="col-sm-1">Tuesday</div>
+    <div class="col-sm-1">Wednesday</div>
+    <div class="col-sm-1">Thursday</div>
+    <div class="col-sm-1">Friday</div>
+    <div class="col-sm-1">Saturday</div>
+    <div class="col-sm-1">Sunday</div>
+
+    @if (CheckMonth())
+    {
+
+    }
+
+    {
+    <div class="row">
+        @for (int j = 1; j <= 7; j++)
+        {
+            <div class="col-sm-1">@j</div>
+        }
+    </div>
+    }
+</div>
+}
+
+
+
+
+
+
+
+
+@code {
+
+    //TODO - Fetch Progress
+
+    [Parameter]
+    public int GoalId { get; set; }
+
+    List<IProgressModel> progress = new List<IProgressModel>();
+
+    IGoalModel goal = new DisplayGoalModel();
+
+    int numberOfColumns;
+    int startMonth;
+    int endMonth;
+    int? currentMonth;
+    int? currentYear;
+
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        progress = await _habitDataAccess.FetchProgressByGoalId(GoalId);
+
+        goal = await _habitDataAccess.FetchGoalById(GoalId);
+
+        SetupTask();
+    }
+
+    private void SetupTask()
+    {
+        startMonth = goal.StartDate.Month;
+        endMonth = goal.TargetPeriod.Month;
+
+        if (goal.StartDate.Year == goal.TargetPeriod.Year)
+        {
+            numberOfColumns = endMonth + 1 - startMonth;
+        }
+        else
+        {
+            int yearDifference = goal.TargetPeriod.Year - goal.StartDate.Year;
+
+            numberOfColumns = endMonth + 1 - startMonth + 12;
+        }
+    }
+
+    private bool CheckMonth()
+    {
+        bool result = false;
+
+        currentMonth ??= goal.StartDate.Month;
+        currentYear ??= goal.TargetPeriod.Year;
+
+
+
+
+        return result;
+    }
+
+}

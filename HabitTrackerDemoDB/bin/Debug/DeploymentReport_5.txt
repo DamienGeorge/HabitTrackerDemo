@@ -1,0 +1,27 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Rename
+       [dbo].[Goal].[StartDate] (Column)
+     Alter
+       [dbo].[Goal] (Table)
+       [dbo].[Progress] (Table)
+       [dbo].[spAdd_Goal] (Procedure)
+       [dbo].[spFetch_GoalsByHabitId] (Procedure)
+
+** Supporting actions
+     Drop
+       [dbo].[FK_Progress_ToGoal] (Foreign Key)
+     Create
+       [dbo].[FK_Progress_ToGoal] (Foreign Key)
+
+The column GoalId on table [dbo].[Progress] must be changed from NULL to NOT NULL. If the table contains data, the ALTER script may not work. To avoid this issue, you must add values to this column for all rows or mark it as allowing NULL values, or enable the generation of smart-defaults as a deployment option.
+

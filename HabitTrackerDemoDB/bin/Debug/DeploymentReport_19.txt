@@ -1,0 +1,23 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Alter
+       [dbo].[Goal] (Table)
+       [dbo].[spAdd_Goal] (Procedure)
+       [dbo].[spFetch_GoalsByHabitId] (Procedure)
+
+** Supporting actions
+     Refresh
+       [dbo].[Delete_GoalById] (Procedure)
+       [dbo].[spDelete_HabitById] (Procedure)
+
+If this deployment is executed, changes to [dbo].[Goal] might introduce run-time errors in [dbo].[spUpdate_GoalById].
+

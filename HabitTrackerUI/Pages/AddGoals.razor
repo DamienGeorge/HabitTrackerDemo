@@ -1,0 +1,106 @@
+﻿@*@page "/addgoals/{Id:int}"*@
+@attribute [Authorize]
+
+@inject IHabitData _HabitDataAccess
+
+<EditForm Model="goal" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group row">
+        <div class="col-sm-4">
+            <label>Goal Name</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" @bind-value="goal.GoalName" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-4">
+            <label>Description of Goal</label>
+        </div>
+        <div class="col-sm-8">
+            <textarea @bind="goal.GoalDescription" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-4">
+            <label>Start Date</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="datetime-local" @bind-value="goal.StartDate" step="1" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-4">
+            <label>Target Completion</label>
+        </div>
+        <div class="col-md-8">
+            <input type="datetime-local" @bind-value="goal.TargetPeriod" step="1" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        @*<div class="w-25"></div>*@
+        <div class="col-sm-12">
+            @*@if (Id != 0)
+        {
+            <button class="btn btn-primary float-right" type="submit">Add Goal</button>
+        }
+        else
+        {*@
+            @if (goal.Id != 0)
+            {
+                <button class="btn btn-light mx-2 float-right" type="submit">Update Goal</button>
+            }
+            else
+            {
+                <button class="btn btn-light mx-2 float-right" type="submit">Add Goal</button>
+            }
+
+            <button class="btn btn-light float-right" type="reset">Clear</button>
+            @*}*@
+        </div>
+
+    </div>
+</EditForm>
+
+
+@code {
+    IGoalModel goal = new DisplayGoalModel();
+
+    List<IGoalModel> goals = new List<IGoalModel>();
+
+    [Parameter]
+    public IGoalModel goalToEdit { get; set; } = new DisplayGoalModel();
+
+    [Parameter]
+    public string Mode { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+       goal = goalToEdit;
+    }
+
+    //protected override void OnParametersSet()
+    //{
+    //    goal = goalToEdit;
+    //}
+
+    [Parameter]
+    public EventCallback<IGoalModel> OnGoalCreated { get; set; }
+
+    private void HandleValidSubmit()
+    {
+        //if (Id > 0)
+        //{
+        //    goal.HabitId = Id;
+        //    await _HabitDataAccess.AddGoal(goal);
+        //}
+        //else
+        //{
+        OnGoalCreated.InvokeAsync(goal);
+
+        goal = new DisplayGoalModel();
+        // }
+    }
+}

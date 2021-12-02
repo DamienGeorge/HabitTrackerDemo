@@ -1,0 +1,10 @@
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerDemoDB\bin\Debug\HabitTrackerDemoDB.dacpac
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerDemoDB\bin\Debug\HabitTrackerDemoDB.dll
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerDemoDB\bin\Debug\HabitTrackerDemoDB.pdb
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerDemoDB\obj\Debug\HabitTrackerDemoDB.sqlprojAssemblyReference.cache
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerDemoDB\obj\Debug\HabitTrackerDemoDB.dll
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerDemoDB\obj\Debug\HabitTrackerDemoDB.pdb
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerDemoDB\obj\Debug\Model.xml
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerDemoDB\obj\Debug\refactor.xml
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerDemoDB\obj\Debug\postdeploy.sql
+C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerDemoDB\obj\Debug\predeploy.sql

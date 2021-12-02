@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0">
+  <Operation Name="Rename Refactor" Key="c6dc898a-79c8-4d8b-b360-d8616e84657c" ChangeDateTime="09/11/2021 17:20:34" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+    <Property Name="ElementName" Value="[dbo].[Habit].[EndDate]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Habit]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="HabitOwnerId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ecd44aad-20df-475b-97cd-a9b07a1b96b4" ChangeDateTime="09/11/2021 17:21:24" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+    <Property Name="ElementName" Value="[dbo].[Habit].[HabitOwnerId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Habit]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="HabitOwnerEmailId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c05024d4-ef52-4e72-a8d9-4948b7936122" ChangeDateTime="09/11/2021 17:23:26" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+    <Property Name="ElementName" Value="[dbo].[Goal].[GoalDe]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Goal]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GoalDescription" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="dfb09514-8be2-4336-b31a-8d8ee39ca711" ChangeDateTime="09/12/2021 22:31:00" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+    <Property Name="ElementName" Value="[dbo].[Habit].[HabitOwnerEmailId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Habit]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="HabitOwnerId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1574edf2-c2ec-4d06-9a41-317d89c7a631" ChangeDateTime="09/14/2021 14:27:45" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+    <Property Name="ElementName" Value="[dbo].[Goal].[TargetPeriod]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Goal]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="StartDate" />
+  </Operation>
+</Operations>

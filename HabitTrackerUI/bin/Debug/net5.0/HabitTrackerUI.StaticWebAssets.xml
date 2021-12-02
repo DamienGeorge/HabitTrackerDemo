@@ -1,0 +1,4 @@
+﻿<StaticWebAssets Version="1.0">
+  <ContentRoot BasePath="/" Path="C:\Users\Dan.G\source\repos\HabitTrackerDemo\HabitTrackerUI\obj\Debug\net5.0\scopedcss\bundle\" />
+  <ContentRoot BasePath="/Identity" Path="C:\Users\Dan.G\.nuget\packages\microsoft.aspnetcore.identity.ui\5.0.2\staticwebassets\V4\" />
+</StaticWebAssets>
